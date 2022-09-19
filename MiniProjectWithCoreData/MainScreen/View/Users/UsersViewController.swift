@@ -12,11 +12,11 @@ protocol UsersViewControllerDelegate: AnyObject {
     func addUsers(nameUser: String)
 }
 
-class UsersViewController: UIViewController, UsersViewControllerDelegate, PresenterInput {
+// Данный класс является Делегатом и выполняет функцию по добавлению пользователей
+class UsersViewController: UIViewController, UsersViewControllerDelegate, PresenterOutput {
     
-    weak var output: PresenterOutput?
+    var presenter: PresenterInput?
     var usersView = UsersView()
-    var model = CoreDataManager.shared
     
     private lazy var tableView: UITableView = {
         var tableView = UITableView(frame: .zero, style: .plain)
@@ -40,7 +40,7 @@ class UsersViewController: UIViewController, UsersViewControllerDelegate, Presen
         usersView.delegate = self
         setupHierarchy()
         setupLayout()
-        output?.getDataUsers()
+        presenter?.getDataUsers()
     }
     
     private func setupHierarchy() {
@@ -62,9 +62,9 @@ class UsersViewController: UIViewController, UsersViewControllerDelegate, Presen
         self.tableView.reloadData()
     }
     
-    // здесь контроллер сохранит данные юзера
+    // функция по добавлению пользователя через презентер. Тоесть вьюконтроллер вызывает презентер и его функцию addUser(nameUser: nameUser)
     func addUsers(nameUser: String) {
-        output?.saveDataUsers(nameUser: nameUser)
+        presenter?.addUser(nameUser: nameUser)
         print(nameUser)
     }
 }
@@ -72,13 +72,14 @@ class UsersViewController: UIViewController, UsersViewControllerDelegate, Presen
 extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        model.users?.count ?? 0
+        presenter?.getUsersCount() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifire, for: indexPath) as? TableViewCell else { return UITableViewCell() }
-        cell.users = model.users?[indexPath.row]
+        
+        cell.users = presenter?.getUser(indexPath.row)
         cell.accessoryType = .disclosureIndicator
         return cell
     }
@@ -86,34 +87,15 @@ extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let vc = DetailViewController()
-        vc.detailView.userInfo = model.users?[indexPath.row]
+        vc.detailView.userInfo = presenter?.getUser(indexPath.row)
+        vc.detailView.delegate = presenter
         self.navigationController?.pushViewController(vc, animated: false)
     }
     
-//    func tableView(_ tableView: UITableView,
-//                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
-//    {
-//
-//        let action = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
-//            guard let user = self.model.users?[indexPath.row] else { return }
-//            self.output?.deleteUser(user: user)
-//
-//        }
-//        return UISwipeActionsConfiguration(actions: [action])
-//    }
-    
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//
-//        tableView.deleteRows(at: [indexPath], with: .fade)
-//
-//        if editingStyle == .delete {
-//            guard let user = model.users?[indexPath.row] else { return }
-//            output?.deleteUser(user: user)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//            self.tableView.reloadData()
-//
-//        } else if editingStyle == .insert {
-//
-//        }
-//    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            presenter?.deleteUser(indexPath.row)
+        }
+    }
 }
