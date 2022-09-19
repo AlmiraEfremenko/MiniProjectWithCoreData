@@ -8,7 +8,15 @@
 import Foundation
 import UIKit
 
+enum Gender {
+    case male
+    case female
+}
+
 class DetailView: UIView {
+    
+    weak var delegate: PresenterInput?
+    var genderChoice = ["male", "female"] 
     
     private lazy var avatar: UIImageView = {
         var avatar = UIImageView()
@@ -24,7 +32,6 @@ class DetailView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .equalSpacing
         stackView.axis = .vertical
-        
         return stackView
     }()
     
@@ -45,10 +52,10 @@ class DetailView: UIView {
         return personImage
     }()
     
-    lazy var namePerson: UITextField = {
+    private lazy var namePerson: UITextField = {
         var namePerson = UITextField()
         namePerson.isEnabled = false
-        namePerson.text = "Name"
+        namePerson.placeholder = "Name"
         namePerson.translatesAutoresizingMaskIntoConstraints = false
         return namePerson
     }()
@@ -70,10 +77,10 @@ class DetailView: UIView {
         return calendarImage
     }()
     
-    lazy var calendarData: UITextField = {
+    private lazy var calendarData: UITextField = {
         var calendarData = UITextField()
         calendarData.isEnabled = false
-        calendarData.text = "01.01.2020"
+        calendarData.placeholder = "Date of Birth"
         calendarData.delegate = self
         calendarData.translatesAutoresizingMaskIntoConstraints = false
         return calendarData
@@ -96,10 +103,10 @@ class DetailView: UIView {
         return genderImage
     }()
     
-    lazy var gender: UITextField = {
+    private lazy var gender: UITextField = {
         var gender = UITextField()
         gender.isEnabled = false
-        gender.text = "Gender"
+        gender.placeholder = "Gender"
         gender.translatesAutoresizingMaskIntoConstraints = false
         return gender
     }()
@@ -113,32 +120,36 @@ class DetailView: UIView {
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.black.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
-        
         return button
     }()
     
     var isChangeUserFields = false
     
     @objc func addTapped() {
-        
-        isChangeUserFields = !isChangeUserFields
-        
+                
         if isChangeUserFields {
             namePerson.isEnabled = false
             calendarData.isEnabled = false
             gender.isEnabled = false
             barButton.setTitle("Edit", for: .normal)
+            userInfo?.name = namePerson.text
+            userInfo?.date = calendarData.text
+            userInfo?.gender = gender.text
+            delegate?.updateUser()
         } else {
             namePerson.isEnabled = true
             calendarData.isEnabled = true
             gender.isEnabled = true
             barButton.setTitle("Save", for: .normal)
         }
+        isChangeUserFields.toggle()
     }
     
     var userInfo: ModelUsers? {
         didSet {
             namePerson.text = userInfo?.name
+            calendarData.text = userInfo?.date
+            gender.text = userInfo?.gender
         }
     }
     
@@ -191,6 +202,7 @@ class DetailView: UIView {
             barButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18),
             barButton.widthAnchor.constraint(equalToConstant: 100),
             barButton.heightAnchor.constraint(equalToConstant: 35)
+            
         ])
     }
 }
