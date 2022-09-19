@@ -7,7 +7,7 @@
 
 import UIKit
 
-// Делегатор - который содержит ссылку на делегат. Вызываем делегат и его функцию по добавлению юзеров
+// Данный класс является Делегатором. Он передает свои функции по добавлению пользователей посредством нажатия кнопки UsersViewControllerу. Это как раз использование делегата как паттерна общения между вью и вьюконтроллером. В свою очередь в данном классе есть свойтсво  weak var delegate: UsersViewControllerDelegate? и далее мы вызываем наш делегат и вызываем его функцию.
 
 class UsersView: UIView {
     
@@ -41,6 +41,7 @@ class UsersView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // вызываем функцию addUsers(nameUser: name)  и  передаем туда наше имя которое ввел в текстфилд пользователь
     @objc func tapButton() {
         guard let name = textField.text else { return }
         delegate?.addUsers(nameUser: name)
