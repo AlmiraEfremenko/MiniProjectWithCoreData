@@ -17,6 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.windowScene = windowScene
         let vc = UsersViewController()
+        let coreDataManager = CoreDataManager.shared
+        let presenter = Presenter(view: vc, serviceCoreData: coreDataManager)
+        vc.presenter = presenter
+        
         let navigationController = UINavigationController(rootViewController: vc)
         window?.rootViewController = navigationController
         window?.backgroundColor = .white
