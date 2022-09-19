@@ -7,34 +7,48 @@
 
 import Foundation
 
-//PresenterOutput  - выходит из презентера в модель
-//PrsenterInput - вход в презентер из модели
+// Presenter - сущность которая является связующим звеном между вью и моделью. Он принимает от вью действия пользователя и запрашивает данные у модели. Забирает данные и отправляет вью. От вью к презентеру будет протокол Output (что означает выходит из вью) и от презентера к вью(Input - что означает вход во вью)
 
-class Presenter: PresenterOutput {
+class Presenter: PresenterInput {
     
-    weak var inputView: PresenterInput?
+    weak var view: PresenterOutput?
     private var serviceCoreData: ServiceCoreData
     
-    init(inputView: PresenterInput, serviceCoreData: ServiceCoreData) {
-        self.inputView = inputView
+    init(view: PresenterOutput, serviceCoreData: ServiceCoreData) {
+        self.view = view
         self.serviceCoreData = serviceCoreData
     }
     
-    func saveDataUsers(nameUser: String) {
+    // описание самой функции по добавлению пользователей в хранилище. Вызываем хранилище и добавляем туда пользователя
+    func addUser(nameUser: String) {
         serviceCoreData.addUsers(name: nameUser)
-        inputView?.showDataUser()
+        view?.showDataUser()
     }
     
+    // функция по получению пользователей
     func getDataUsers() {
-        inputView?.showDataUser()
+        serviceCoreData.getUsers()
+        view?.showDataUser()
     }
     
-    func deleteUser(user: ModelUsers) {
-        serviceCoreData.delete(user: user)
-        inputView?.showDataUser()
+    // функция по получению кол-ва пользователей
+    func getUsersCount() -> Int {
+        serviceCoreData.getUsersCount()
     }
     
-    func updateUser(user: ModelUsers) {
-        
+    // функция по получению  пользователя по индексу
+    func getUser(_ index: Int) -> ModelUsers? {
+        serviceCoreData.getUser(index)
+    }
+    
+    // функция по удалению
+    func deleteUser(_ index: Int) {
+        serviceCoreData.delete(index)
+        view?.showDataUser()
+    }
+    
+    // функция по обновлению
+    func updateUser() {
+        serviceCoreData.update()
     }
 }

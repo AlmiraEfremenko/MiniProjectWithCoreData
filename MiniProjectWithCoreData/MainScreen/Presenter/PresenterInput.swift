@@ -1,5 +1,5 @@
 //
-//  PresenterOutput.swift
+//  PresenterInput.swift
 //  MiniProjectWithCoreData
 //
 //  Created by MAC on 14.09.2022.
@@ -7,11 +7,13 @@
 
 import Foundation
 
-// правила по передачи данных в хранилище
+// Данный протокол описывает функции по которым осуществляться будет работа презентера как класса.
 protocol PresenterInput: AnyObject {
     
-    func saveDataUsers(nameUser: String)
+    func addUser(nameUser: String)
     func getDataUsers()
-    func deleteUser(user: ModelUsers)
-    func updateUser(user: ModelUsers)
+    func getUsersCount() -> Int
+    func getUser(_ index: Int) -> ModelUsers?
+    func deleteUser(_ index: Int)
+    func updateUser()
 }

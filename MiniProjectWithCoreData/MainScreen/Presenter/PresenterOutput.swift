@@ -1,5 +1,5 @@
 //
-//  PresenterInput.swift
+//  PresenterOutput.swift
 //  MiniProjectWithCoreData
 //
 //  Created by MAC on 14.09.2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-// передача данных из хранилища в контроллер
+// данный протокол описывает что будет выходить от презентера к вью
 protocol PresenterOutput: AnyObject {
     
     func showDataUser()
