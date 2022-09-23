@@ -57,7 +57,6 @@ class UsersViewController: UIViewController, UsersViewControllerDelegate, Presen
     }
     
     // здесь получить данные и отобразить их во вью
-    
     func showDataUser() {
         self.tableView.reloadData()
     }

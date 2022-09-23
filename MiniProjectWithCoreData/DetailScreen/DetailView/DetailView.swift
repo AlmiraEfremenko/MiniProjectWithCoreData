@@ -16,7 +16,6 @@ enum Gender {
 class DetailView: UIView {
     
     weak var delegate: PresenterInput?
-    var genderChoice = ["male", "female"] 
     
     private lazy var avatar: UIImageView = {
         var avatar = UIImageView()
