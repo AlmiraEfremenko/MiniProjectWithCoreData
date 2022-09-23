@@ -152,7 +152,6 @@
 			isa = PBXGroup;
 			children = (
 				0496B9F828D34F6300DC6C3D /* DetailView */,
-				0496B9F928D34F6D00DC6C3D /* DetailPresenter */,
 			);
 			path = DetailScreen;
 			sourceTree = "<group>";
@@ -164,13 +163,6 @@
 				8BDEBBCF28D652AE00825506 /* DetailViewController.swift */,
 			);
 			path = DetailView;
-			sourceTree = "<group>";
-		};
-		0496B9F928D34F6D00DC6C3D /* DetailPresenter */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DetailPresenter;
 			sourceTree = "<group>";
 		};
 		0496B9FC28D34F9300DC6C3D /* MainScreen */ = {
